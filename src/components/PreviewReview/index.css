@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+.preview-review-grid{
+    background-color: #121212 !important;
+}
+
+.preview-title{
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 5rem !important;
+    text-align: center !important;
+    color: #DCDCDC !important;
+    margin-top: 2.8rem !important;
+}
+
+.preview-reviews-container{
+    background-color: #121212 !important;
+    text-align: center !important;
+    border-color: black !important;
+    border-width: 1px !important;
+    margin: 3rem !important;
+    margin-top: 1rem !important;
+    margin-left: 4rem !important;
+}
+
+
+
+.preview-review-card{
+    width: 24rem !important;
+    margin-top: 3rem !important;
+    background-color: #262626 !important;
+    border-radius: 5% !important;
+}
+
+.preview-img{
+    height: 9rem !important;
+    width: 6rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.preview-review-title{
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 2rem !important;
+    color: #DCDCDC !important;
+    margin: 1.5rem !important;
+}
+
+.preview-review-description{
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 100 !important;
+    font-size: 1rem !important;
+    color: #DCDCDC !important;
+    margin: 1.5rem !important;
+}
+.preview-review-author{
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 300 !important;
+    font-size: 1.2rem !important;
+    color: #2FC454 !important;
+    margin: 1.5rem !important;
+}
+
+.preview-add-btn{
+    color: #DCDCDC !important;
+    margin-right: 3rem !important;
+    margin-bottom: .8rem !important;
+    size: 3rem !important;    
+}
+
+.preview-add-icon{
+    color: #DCDCDC !important;
+    background-color: #2FC454 !important;
+    font-size: 3rem !important;
+    border-radius: 50% !important;
+}
+
+a.detail-link:link {
+    color: black !important;
+    text-decoration: none !important;
+}
+  
+a.detail-link:visited {
+    color: black !important;
+    text-decoration: none !important;
+}
+  
+a.detail-link:hover {
+    color: rgb(31, 31, 31) !important;
+    text-decoration: none !important;
+}
+  

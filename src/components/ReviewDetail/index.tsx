@@ -12,6 +12,7 @@ interface ReviewDetailProps {
     review: Review;
     addMangaToRead(mangaId: any): void;
     deleteMangaFromToRead(mangaId: any): void;
+    imageUrl: string;
 }
 
 /**
@@ -77,8 +78,8 @@ interface ReviewDetailProps {
 
                 <Grid item lg={3}>
                     <img className="detail-img"
-                                    src="https://static.zara.net/photos///2021/I/0/1/p/4365/212/406/2/w/750/4365212406_1_1_1.jpg?ts=1626866635860"
-                                    alt="Jeans cropped flare"
+                                    src={props.imageUrl}
+                                    alt="Waifus"
                     />
                 </Grid>
                 <Grid item lg={6}>

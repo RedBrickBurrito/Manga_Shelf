@@ -7,6 +7,7 @@ import User from "../../types/User";
 interface DetailState {
     relatedReviews: Review[];
     review: Review;
+    imageURL: string;
 }
 
 /**
@@ -17,7 +18,8 @@ class DetailedReview extends React.Component<{}, DetailState>  {
 
     state = {
         relatedReviews: [] as Review[],
-        review: {} as Review
+        review: {} as Review,
+        imageURL: ""
     }
 
     /**
@@ -29,10 +31,12 @@ class DetailedReview extends React.Component<{}, DetailState>  {
             <ReviewDetail 
             relatedReviews={this.state.relatedReviews} review={this.state.review}
             addMangaToRead={this.addMangaToRead} deleteMangaFromToRead={this.deleteMangaFromToRead} 
+            imageUrl={this.state.imageURL}
             />
         )
     }
-    componentDidMount() {
+
+    async componentDidMount() {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const reviewId = Number(urlParams.get('reviewId'));  
@@ -64,8 +68,15 @@ class DetailedReview extends React.Component<{}, DetailState>  {
             mangaTitle: manga.title,
         };
 
+        const response = await (await fetch("https://api.waifu.pics/sfw/waifu")).json();
+        
+        console.log(response);
+        const url = response.url;
+        
+
         this.setState({
-            review: reviewUpdate
+            review: reviewUpdate,
+            imageURL: url
         });
         
         const relatedReviews = [

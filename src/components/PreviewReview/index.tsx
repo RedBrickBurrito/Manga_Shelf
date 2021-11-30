@@ -10,6 +10,7 @@ interface ReviewPreviewProps {
     reviews: Review[];
     addMangaToRead(mangaId: any): void;
     deleteMangaFromToRead(mangaId: any): void;
+    imageUrl: string;
 }
 
 /**
@@ -113,8 +114,8 @@ interface ReviewPreviewProps {
                                     <Typography  className="preview-review-description">{review.description}</Typography>
                                     <Typography  className="preview-review-author">- {review.username}</Typography>
                                     <img className="preview-img"
-                                        src="https://static.zara.net/photos///2021/I/0/1/p/4365/212/406/2/w/750/4365212406_1_1_1.jpg?ts=1626866635860"
-                                        alt="Jeans cropped flare"
+                                        src={props.imageUrl}
+                                        alt="Waifu"
                                     />
                                 </Paper>
                             </Link>

@@ -6,6 +6,7 @@ import User from "../../types/User";
 
 interface ListState {
     reviews: Review[];
+    imageURL: string;
   }
 
 /**
@@ -16,6 +17,7 @@ class Home extends React.Component<{}, ListState> {
 
     state = {
         reviews: [] as Review[],
+        imageURL: ""
       };
 
     /**
@@ -29,11 +31,18 @@ class Home extends React.Component<{}, ListState> {
                 reviews={this.state.reviews} 
                 addMangaToRead={this.addMangaToRead} 
                 deleteMangaFromToRead={this.deleteMangaFromToRead} 
+                imageUrl={this.state.imageURL}
                 />
             );
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+
+        const response = await (await fetch("https://api.waifu.pics/sfw/waifu")).json();
+        
+        console.log(response);
+        const url = response.url;
+
         const reviews = [
             {
                 id: 1,
@@ -117,7 +126,10 @@ class Home extends React.Component<{}, ListState> {
             reviewsUpdate.push(reviewUpdate);                       
           }
 
-        this.setState({ reviews: reviewsUpdate});
+        this.setState({ 
+            reviews: reviewsUpdate,
+            imageURL: url
+        });
     }
 
     addMangaToRead(mangaId: any){

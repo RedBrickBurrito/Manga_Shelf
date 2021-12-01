@@ -21,7 +21,7 @@ const NavigationBar = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar className="navbar" position="static">
         <Toolbar variant="dense">
-          <Link className="home-link" to="/">
+          <Link className="home-link" to="/home">
             <Typography className="header-text">
               Manga Shelf
             </Typography>

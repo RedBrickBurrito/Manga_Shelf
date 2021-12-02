@@ -26,6 +26,11 @@ const NavigationBar = () => {
               Manga Shelf
             </Typography>
           </Link>
+          <Link className="publish-link" to ="/publish-review">
+            <Typography className="secondary-text">
+              Publish Review
+            </Typography>
+          </Link>
           <IconButton className="bookmars-btn"  onClick={()=>{
             history.push('/to-read-list');
           }}>

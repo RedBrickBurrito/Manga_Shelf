@@ -1,6 +1,6 @@
-import Manga from '../types/Manga';
 import Review from '../types/Review';
 import ReviewsAPI from './ReviewsAPI';
+import SessionStorageHelper from './../tools/SessionStorageHelper'
 
 
 class ReviewsService {
@@ -11,12 +11,12 @@ class ReviewsService {
     }
 
     postReview(review:Review){
-        //console.log(review);
+        console.log(review);
         return ReviewsAPI.post("/reviews",review,{headers:this.createHeaders()})
     }
 
     createHeaders(): any {
-        var headers={Authorization:"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjM4NDIzNTEyLCJpYXQiOjE2Mzg0MDU1MTJ9.NfzNtYD9zcQaVWMQXYb1YliNYyqHz3M1F5BnpVr8TwgPi0EjUb0rZkGbrtPbfroPJkjLdCLGlTES0DemYNiVuQ"};
+        var headers={Authorization:"Bearer "+ SessionStorageHelper.getToken()};
         return headers;
     }
 }

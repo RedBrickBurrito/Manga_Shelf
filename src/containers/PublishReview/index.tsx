@@ -44,7 +44,7 @@ class PublishReview extends React.Component<{}, MangaState> {
     handleSubmit = (event: any, manga:Manga) =>{
         
         this.state.review = {userId:SessionStorageHelper.getUserId(), mangaId:manga.id as number, description:this.state.description, 
-            rate:this.state.rate, date:this.state.date, mangaTitle:manga.title, username:SessionStorageHelper.getUsername()}
+            rate:this.state.rate, date:this.getDate(new Date()), mangaTitle:manga.title, username:SessionStorageHelper.getUsername()}
         ReviewsService.postReview(this.state.review)
         .then((response)=>{
             console.log(response.statusText);
@@ -92,6 +92,12 @@ class PublishReview extends React.Component<{}, MangaState> {
         .catch((error)=>{
             console.log(error);
         })
+    }
+
+    getDate(yourDate:Date){
+        const offset = yourDate.getTimezoneOffset()
+        yourDate = new Date(yourDate.getTime() - (offset*60*1000))
+        return yourDate.toISOString().split('T')[0]
     }
 
     

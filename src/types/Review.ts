@@ -4,8 +4,7 @@ export default interface Review {
     mangaId: number,    
     description: string,
     rate: number,
-    date?: string,
-    mangaTitle?: string,
-    mangaAuthor?: string,
-    username?: string,
+    date: string,
+    mangaTitle: string,
+    username: string
 }

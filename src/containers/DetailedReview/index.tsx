@@ -41,12 +41,15 @@ class DetailedReview extends React.Component<{}, DetailState>  {
         const urlParams = new URLSearchParams(queryString);
         const reviewId = Number(urlParams.get('reviewId'));  
 
+        
+
         const review = {
             id: reviewId,
             userId: 11,    
             mangaId: 111,    
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            rate: 4.4
+            rate: 4.4,
+            date: this.getDate(new Date())
 
         } as Review;
 
@@ -86,6 +89,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 2,
@@ -93,6 +97,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 3,
@@ -100,6 +105,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 4,
@@ -107,6 +113,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 5,
@@ -114,6 +121,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 6,
@@ -121,6 +129,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 7,
@@ -128,6 +137,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
             {
                 id: 8,
@@ -135,6 +145,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
                 mangaId: 111,    
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 rate: 4.4,
+                date: this.getDate(new Date())
             },
         ];
 
@@ -164,6 +175,12 @@ class DetailedReview extends React.Component<{}, DetailState>  {
 
         this.setState({ relatedReviews: reviewsUpdate});
 
+    }
+
+    getDate(yourDate:Date){
+        const offset = yourDate.getTimezoneOffset()
+        yourDate = new Date(yourDate.getTime() - (offset*60*1000))
+        return yourDate.toISOString().split('T')[0]
     }
 
     addMangaToRead(mangaId: any){

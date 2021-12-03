@@ -131,7 +131,6 @@ class DetailedReview extends React.Component<{}, DetailState>  {
             console.log(error);
             console.log("Error adding manga "+ toRead.mangaId + " to list");
             });  
-
     }
     
     deleteMangaFromToRead = () =>{

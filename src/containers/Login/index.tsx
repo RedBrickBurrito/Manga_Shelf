@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, Typography, IconButton, Collapse, Box, Button } from "@material-ui/core";
 import LoginService from "../../services/LoginService";
+import UserService from "../../services/UserService";
 import LoginForm from "../../components/LoginForm"
 import { RouteComponentProps, withRouter } from "react-router";
 import SessionStorageHelper from "../../tools/SessionStorageHelper";
@@ -52,7 +53,19 @@ class Login extends React.Component<RouteComponentProps, LoginState> {
             </>
         );
     }
-
+ 
+    getUsername = (username:string) => {
+        UserService.getUserbyUsername(this.state.username)
+            .then(response => {
+                const user = response.data;
+                console.log(user);
+                SessionStorageHelper.updateUsername(user.username);
+                SessionStorageHelper.updateUserId(user.id);
+            }).catch(error => {
+                console.log(error);
+            });
+    } 
+    
     handleSubmit = (event: any) => {
         this.setState({ enableSubmit: false, authenticationFailed: false });
 
@@ -60,6 +73,7 @@ class Login extends React.Component<RouteComponentProps, LoginState> {
             .then(response => {
                 const jsonWebToken = response.data;
                 console.log(jsonWebToken);
+                this.getUsername(this.state.username);
                 SessionStorageHelper.updateToken(jsonWebToken.token);
                 this.props.history.push('/home');
             }).catch(error => {

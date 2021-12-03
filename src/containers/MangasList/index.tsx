@@ -3,7 +3,6 @@ import NavigationBar from "../../components/NavBar";
 import ToReadList from "../../components/ToReadList";
 import MangaShelfService from "../../services/MangaShelfService";
 import SessionStorageHelper from "../../tools/SessionStorageHelper";
-import Manga from "../../types/Manga";
 import ToRead from "../../types/ToRead";
 
 interface ListState {
@@ -25,7 +24,7 @@ class MangasList extends React.Component<{}, ListState> {
         newToRead: {} as ToRead,
         openAdded: false,
         openDeleted: false,
-        title: "Your mangas to read later",
+        title: "Your mangas in queue",
       };
 
     /**
@@ -60,38 +59,15 @@ class MangasList extends React.Component<{}, ListState> {
           .then(async(response) => {
             const toReadList = response.data as ToRead[];
 
-            if (toReadList.length === 0){
-                const title = "You have no mangas to read"
+            if (toReadList.length === 0)
+            {
+                const title = "You have no mangas in queue"
                 this.setState({title});
             } 
-            else{
-
-                const toReadListUpdate = [] as ToRead[];
-
-                for (const toRead of toReadList) {
-        
-                    MangaShelfService.getManga(toRead.mangaId)
-                    .then(async(response) => {
-                        const manga = response.data as Manga;
-    
-                        const toReadUpdate = {...toRead, 
-                            mangaTitle: manga.title as string,
-                            mangaAuthor: manga.author as string,    
-                        };
-            
-                        toReadListUpdate.push(toReadUpdate);    
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });                             
-                  }
-        
-                this.setState({ toReadList: toReadListUpdate});
-                console.log(this.state.toReadList);
-    
-                
+            else
+            {
+                this.setState({ toReadList});  
             }
-
             })
           .catch((error) => {
             console.log(error);
@@ -137,6 +113,8 @@ class MangasList extends React.Component<{}, ListState> {
         console.log(error);
         console.log("Error deleting manga "+ idToDelete + " from list");
         }); 
+
+        this.forceUpdate();
         
     }
 

@@ -2,6 +2,7 @@ import React from "react";
 import NavigationBar from "../../components/NavBar";
 import ReviewPreview from "../../components/PreviewReview";
 import LoginService from "../../services/MangaShelfService";
+import SessionStorageHelper from "../../tools/SessionStorageHelper";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
 import ToRead from "../../types/ToRead";
@@ -73,7 +74,7 @@ class Home extends React.Component<{}, ListState> {
         console.log(currentDate);
 
         const toRead = {
-            userId: 21,
+            userId: SessionStorageHelper.getUserId(),
             mangaId: mangaId,
             dateAdded: currentDate,
         } as ToRead;

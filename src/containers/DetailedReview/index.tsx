@@ -2,6 +2,7 @@ import React from "react";
 import NavigationBar from "../../components/NavBar";
 import ReviewDetail from "../../components/ReviewDetail";
 import MangaShelfService from "../../services/MangaShelfService";
+import SessionStorageHelper from "../../tools/SessionStorageHelper";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
 import ToRead from "../../types/ToRead";
@@ -111,7 +112,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
         console.log(currentDate);
 
         const toRead = {
-            userId: 21,
+            userId: SessionStorageHelper.getUserId(),
             mangaId: mangaId,
             dateAdded: currentDate,
         } as ToRead;

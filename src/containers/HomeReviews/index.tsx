@@ -1,12 +1,18 @@
 import React from "react";
+import NavigationBar from "../../components/NavBar";
 import ReviewPreview from "../../components/PreviewReview";
+import LoginService from "../../services/LoginService";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
-import User from "../../types/User";
+import ToRead from "../../types/ToRead";
 
 interface ListState {
     reviews: Review[];
     imageURL: string;
+    newToRead: ToRead;
+    mangaToRead: Manga;
+    openAdded: boolean;
+    openDeleted: boolean;
   }
 
 /**
@@ -17,7 +23,11 @@ class Home extends React.Component<{}, ListState> {
 
     state = {
         reviews: [] as Review[],
-        imageURL: ""
+        imageURL: "",
+        newToRead: {} as ToRead,
+        mangaToRead: {} as Manga,
+        openAdded: false,
+        openDeleted: false,
       };
 
     /**
@@ -26,145 +36,97 @@ class Home extends React.Component<{}, ListState> {
      */
     render() {
     
-        return (        
-                <ReviewPreview 
-                reviews={this.state.reviews} 
-                addMangaToRead={this.addMangaToRead} 
-                deleteMangaFromToRead={this.deleteMangaFromToRead} 
-                imageUrl={this.state.imageURL}
-                />
+        return (     
+                <>
+                <NavigationBar />
+                <ReviewPreview
+                    reviews={this.state.reviews}
+                    addMangaToRead={this.addMangaToRead}
+                    deleteMangaFromToRead={this.deleteMangaFromToRead}
+                    closeAlert={this.closeAlert}
+                    imageUrl={this.state.imageURL} newToRead={this.state.newToRead} mangaToRead={this.state.mangaToRead}
+                    openAdded={this.state.openAdded} openDeleted={this.state.openDeleted}/>
+                </>
             );
     }
 
     async componentDidMount(){
 
-        const response = await (await fetch("https://api.waifu.pics/sfw/waifu")).json();
+        const resImange = await (await fetch("https://api.waifu.pics/sfw/waifu")).json();
+        const imageURL = resImange.url;
+        this.setState({imageURL});
         
-        console.log(response);
-        const url = response.url;
+        LoginService.getReviews()
+          .then(async(response) => {
+            const reviews = response.data as Review[];
+            console.log(reviews);
+            this.setState({ reviews});
 
-        const reviews = [
-            {
-                id: 1,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 2,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 3,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 4,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 5,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 6,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 7,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-            {
-                id: 8,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-                date: this.getDate(new Date())
-            },
-        ];
-
-        const reviewsUpdate = [] as Review[];
-
-        for (const review of reviews) {
-            const user = {
-                id: 11,    
-                username: "Scyruz",    
-                password: "root",    
-                email: "email@tec.mx"
-            } as User; 
-
-            const manga = {
-                id: 111,    
-                title: "Manga Title",    
-                author: "CLAMP",    
-            } as Manga;
-
-            const reviewUpdate = {...review, 
-                username: user.username,
-                mangaTitle: manga.title,
-            };
-
-            reviewsUpdate.push(reviewUpdate);                       
-          }
-
-        this.setState({ 
-            reviews: reviewsUpdate,
-            imageURL: url
-        });
+          })
+          .catch((error) => {
+            console.log(error);
+            });          
     }
 
-    getDate(yourDate:Date){
-        const offset = yourDate.getTimezoneOffset()
-        yourDate = new Date(yourDate.getTime() - (offset*60*1000))
-        return yourDate.toISOString().split('T')[0]
-    }
+    addMangaToRead = (mangaId: any) => {      
+        const currentDate = new Date().getDate().toString();
+        console.log(currentDate);
 
-    addMangaToRead(mangaId: any){
-        try
-        {
-            console.log("Manga "+ mangaId + " added to list");
+        const toRead = {
+            userId: 21,
+            mangaId: mangaId,
+            dateAdded: currentDate,
+        } as ToRead;
 
-        }
-        catch(e){
+        LoginService.addToRead(toRead)
+            .then(async(response) => {
+                console.log(response);
+                console.log("Manga " + mangaId + " added to list");
+
+                const newToRead = response.data as ToRead;
+
+                LoginService.getManga(mangaId)
+                    .then(async(response) => {
+                        const mangaToRead = response.data as Manga;
+                        this.setState({mangaToRead});
+                        console.log(mangaToRead);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });          
+
+                this.setState({newToRead, openAdded: true, openDeleted: false});
+            })
+            .catch((error) => {
+            console.log(error);
             console.log("Error adding manga "+ mangaId + " to list");
-        }
+            });  
     }
     
-    deleteMangaFromToRead(mangaId: any){
-        try
-        {
-            console.log("Manga "+ mangaId + " deleted from list");
+    deleteMangaFromToRead = () => {
+
+        const idToDelete = this.state.newToRead.id as number;
+
+        LoginService.deleteFromToReadList(idToDelete)
+        .then(async(response) => {
+            console.log(response)
+            console.log("Manga "+ idToDelete + " deleted from list");
+
+            this.setState({openAdded: false, openDeleted:true});
+        })
+        .catch((error) => {
+        console.log(error);
+        console.log("Error deleting manga "+ idToDelete + " from list");
+        });           
+    }
+
+    closeAlert = (alert: string) => {
+        if (alert === "added"){
+            this.setState({openAdded: false});
         }
-        catch(e)
-        {
-            console.log("Error deleting manga "+ mangaId + " from list");
+
+        if(alert === "deleted"){
+            this.setState({openDeleted:false});
         }
     }
 }

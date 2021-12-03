@@ -5,12 +5,19 @@ import { Link } from 'react-router-dom';
 import Review from '../../types/Review';
 import { Alert } from '@mui/material';
 import React from 'react';
+import ToRead from '../../types/ToRead';
+import Manga from '../../types/Manga';
 
 interface ReviewPreviewProps {
     reviews: Review[];
     addMangaToRead(mangaId: any): void;
-    deleteMangaFromToRead(mangaId: any): void;
+    deleteMangaFromToRead(): void;
+    closeAlert(alert: string): void;
     imageUrl: string;
+    newToRead: ToRead;
+    openAdded: boolean;
+    openDeleted: boolean;
+    mangaToRead: Manga;
 }
 
 /**
@@ -18,43 +25,12 @@ interface ReviewPreviewProps {
  * @returns ProductPreview UI elements
  */
  const ReviewPreview: React.FC<ReviewPreviewProps> = (props) => {
-    const [manga, setManga] = React.useState({id:0, title:" " as any});
-    const [openAdded, setOpenAdded] = React.useState(false);
-    const [openDeleted, setOpenDeleted] = React.useState(false);
-    // var listPrice = 0.0;
-    // if (
-    //     props.product !== undefined &&
-    //     props.product.childSkus !== undefined &&
-    //     props.product.childSkus[0] !== undefined
-    // ) {
-    //     listPrice = props.product.childSkus[0].listPrice;
-    // }
-
-    // var salePrice = 0.0;
-    // if (
-    //     props.product !== undefined &&
-    //     props.product.childSkus !== undefined &&
-    //     props.product.childSkus[0] !== undefined
-    // ) {
-    //     salePrice = props.product.childSkus[0].salePrice;
-    // }
-
-    // var mediumImageUrl = "";
-    // if (
-    //     props.product !== undefined &&
-    //     props.product.childSkus !== undefined &&
-    //     props.product.childSkus[0] !== undefined
-    // ) {
-    //     mediumImageUrl = props.product.childSkus[0].mediumImageUrl;
-    // } else {
-    //     mediumImageUrl = "https://dummyimage.com/200x200/000/0011ff"
-    // }
 
     return (
         <div className="ReviewPreview">
             <Grid container className="preview-review-grid" spacing={2}>
                 <Grid item lg={12}>
-                    <Collapse in={openAdded}>
+                    <Collapse in={props.openAdded}>
                         <Alert 
                             className="detail-alert" 
                             severity="success"
@@ -64,26 +40,24 @@ interface ReviewPreviewProps {
                                     className="detail-alert-undo-btn" 
                                     variant="contained"
                                     onClick={()=>{
-                                        props.deleteMangaFromToRead(manga.id); 
-                                        setOpenAdded(false);
-                                        setOpenDeleted(true);
+                                        props.deleteMangaFromToRead(); 
                                         }}>
                                     UNDO
                                 </Button>
                                 <Button 
                                     className="detail-alert-close-btn"
                                     variant="outlined" 
-                                    onClick={()=>{setOpenAdded(false)}}>
+                                    onClick={()=>{props.closeAlert("added")}}>
                                     CLOSE
                                 </Button>
                                 </Box>
                             }
                         >
-                        {manga.title} added to read later!
+                        {props.mangaToRead.title} added to read later!
                         </Alert>
                     </Collapse>
 
-                    <Collapse in={openDeleted}>
+                    <Collapse in={props.openDeleted}>
                         <Alert 
                             className="detail-alert" 
                             severity="warning"
@@ -92,13 +66,13 @@ interface ReviewPreviewProps {
                                 <Button 
                                     className="detail-alert-close-btn"
                                     variant="outlined" 
-                                    onClick={()=>{setOpenDeleted(false)}}>
+                                    onClick={()=>{props.closeAlert("deleted")}}>
                                     CLOSE
                                 </Button>
                                 </Box>
                             }
                         >
-                        {manga.title} deleted from list
+                        {props.mangaToRead.title} deleted from list
                         </Alert>
                     </Collapse>
                 </Grid>
@@ -123,9 +97,6 @@ interface ReviewPreviewProps {
                                 className="preview-add-btn" 
                                 onClick={()=>{
                                     props.addMangaToRead(review.mangaId);
-                                    setManga({id: review.mangaId, title: review.mangaTitle});
-                                    setOpenAdded(true);
-                                    setOpenDeleted(false);
                                      }}>
                                 <AddIcon className="preview-add-icon"></AddIcon>
                             </IconButton> 

@@ -1,7 +1,5 @@
 import React from "react";
-import { Grid, Typography, IconButton, Collapse, Box, Button } from "@material-ui/core";
-import LoginService from "../../services/LoginService";
-import UserService from "../../services/UserService";
+import MangaShelfService from "../../services/MangaShelfService";
 import LoginForm from "../../components/LoginForm"
 import { RouteComponentProps, withRouter } from "react-router";
 import SessionStorageHelper from "../../tools/SessionStorageHelper";
@@ -55,7 +53,7 @@ class Login extends React.Component<RouteComponentProps, LoginState> {
     }
  
     getUsername = (username:string) => {
-        UserService.getUserbyUsername(this.state.username)
+        MangaShelfService.getUserbyUsername(this.state.username)
             .then(response => {
                 const user = response.data;
                 console.log(user);
@@ -69,7 +67,7 @@ class Login extends React.Component<RouteComponentProps, LoginState> {
     handleSubmit = (event: any) => {
         this.setState({ enableSubmit: false, authenticationFailed: false });
 
-        LoginService.login(this.state.username, this.state.password)
+        MangaShelfService.login(this.state.username, this.state.password)
             .then(response => {
                 const jsonWebToken = response.data;
                 console.log(jsonWebToken);

@@ -1,11 +1,10 @@
 import React from "react";
 import NavigationBar from "../../components/NavBar";
 import ReviewDetail from "../../components/ReviewDetail";
-import LoginService from "../../services/LoginService";
+import MangaShelfService from "../../services/MangaShelfService";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
 import ToRead from "../../types/ToRead";
-import User from "../../types/User";
 
 interface DetailState {
     relatedReviews: Review[];
@@ -57,12 +56,12 @@ class DetailedReview extends React.Component<{}, DetailState>  {
         const urlParams = new URLSearchParams(queryString);
         const reviewId = Number(urlParams.get('reviewId'));  
 
-        LoginService.getReview(reviewId)
+        MangaShelfService.getReview(reviewId)
           .then(async(response) => {
             const review = response.data as Review;
             console.log(review);
 
-            LoginService.getMangaReviews(review.mangaId)
+            MangaShelfService.getMangaReviews(review.mangaId)
           .then(async(response) => {
             const resRelatedReviews = response.data as Review[];
 
@@ -118,7 +117,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
         } as ToRead;
 
 
-        LoginService.addToRead(toRead)
+        MangaShelfService.addToRead(toRead)
             .then(async(response) => {
                 console.log(response);
                 console.log("Manga " + toRead.mangaId + " added to list");
@@ -136,7 +135,7 @@ class DetailedReview extends React.Component<{}, DetailState>  {
     deleteMangaFromToRead = () =>{
         const idToDelete = this.state.newToRead.id as number;
 
-        LoginService.deleteFromToReadList(idToDelete)
+        MangaShelfService.deleteFromToReadList(idToDelete)
         .then(async(response) => {
             console.log(response)
             console.log("Manga "+ idToDelete + " deleted from list");

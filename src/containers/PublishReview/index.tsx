@@ -2,9 +2,10 @@ import React from "react";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
 import DetailPublish from "../../components/PublishDetail";
-import ReviewsService from "../../services/ReviewsService";
+import MangaShelfService from "../../services/MangaShelfService";
 import SessionStorageHelper from "../../tools/SessionStorageHelper"
 import { SelectChangeEvent } from "@mui/material/Select";
+import NavigationBar from "../../components/NavBar";
 
 
 interface MangaState {
@@ -34,10 +35,13 @@ class PublishReview extends React.Component<{}, MangaState> {
     }
 
     render() {
-        return <DetailPublish mangas={this.state.mangas} 
-                userId={this.state.userId} mangaId={this.state.mangaId} description={this.state.description} 
-                rate={this.state.rate} date={this.state.date} onSubmit={this.handleSubmit} 
-                onDescriptionChange={this.handleDescriptionChange} onRateChange={this.handleChangeRate}/>
+        return (
+            <>
+            <NavigationBar /><DetailPublish mangas={this.state.mangas}
+                userId={this.state.userId} mangaId={this.state.mangaId} description={this.state.description}
+                rate={this.state.rate} date={this.state.date} onSubmit={this.handleSubmit}
+                onDescriptionChange={this.handleDescriptionChange} onRateChange={this.handleChangeRate} />
+                </>)
         
     }
 
@@ -45,7 +49,7 @@ class PublishReview extends React.Component<{}, MangaState> {
         
         this.state.review = {userId:SessionStorageHelper.getUserId(), mangaId:manga.id as number, description:this.state.description, 
             rate:this.state.rate, date:this.getDate(new Date()), mangaTitle:manga.title, username:SessionStorageHelper.getUsername()}
-        ReviewsService.postReview(this.state.review)
+            MangaShelfService.postReview(this.state.review)
         .then((response)=>{
             console.log(response.statusText);
         })
@@ -70,7 +74,7 @@ class PublishReview extends React.Component<{}, MangaState> {
     }
 
     componentDidMount(){
-        ReviewsService.getAll()
+        MangaShelfService.getAll()
         .then((response)=>{
             const mangas=response.data;
             console.log(mangas);
@@ -85,7 +89,7 @@ class PublishReview extends React.Component<{}, MangaState> {
     }
 
     postReview(review:Review){
-        ReviewsService.postReview(review)
+        MangaShelfService.postReview(review)
         .then((response)=>{
             console.log(response.statusText);
         })

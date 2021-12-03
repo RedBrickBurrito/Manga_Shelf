@@ -1,7 +1,8 @@
 import React from "react";
 import NavigationBar from "../../components/NavBar";
 import ToReadList from "../../components/ToReadList";
-import LoginService from "../../services/LoginService";
+import MangaShelfService from "../../services/MangaShelfService";
+import SessionStorageHelper from "../../tools/SessionStorageHelper";
 import Manga from "../../types/Manga";
 import ToRead from "../../types/ToRead";
 
@@ -52,7 +53,10 @@ class MangasList extends React.Component<{}, ListState> {
 
     componentDidMount(){
 
-        LoginService.getToReadList(21)
+        const userId = SessionStorageHelper.getUserId() as number;
+        console.log(userId);
+
+        MangaShelfService.getToReadList(userId)
           .then(async(response) => {
             const toReadList = response.data as ToRead[];
 
@@ -66,7 +70,7 @@ class MangasList extends React.Component<{}, ListState> {
 
                 for (const toRead of toReadList) {
         
-                    LoginService.getManga(toRead.mangaId)
+                    MangaShelfService.getManga(toRead.mangaId)
                     .then(async(response) => {
                         const manga = response.data as Manga;
     
@@ -96,7 +100,7 @@ class MangasList extends React.Component<{}, ListState> {
 
     addMangaToRead = (toRead: ToRead) => {
 
-        LoginService.addToRead(toRead)
+        MangaShelfService.addToRead(toRead)
             .then(async(response) => {
                 console.log(response);
                 console.log("Manga " + toRead.mangaId + " added to list");
@@ -114,7 +118,7 @@ class MangasList extends React.Component<{}, ListState> {
     
     deleteMangaFromToRead = (idToDelete: any) => {
 
-        LoginService.getToRead(idToDelete)
+        MangaShelfService.getToRead(idToDelete)
         .then(async(response) => {
             const newToRead = response.data as ToRead;
             this.setState({newToRead});
@@ -122,7 +126,7 @@ class MangasList extends React.Component<{}, ListState> {
         .catch((error) => {
         console.log(error);
         });         
-        LoginService.deleteFromToReadList(idToDelete)
+        MangaShelfService.deleteFromToReadList(idToDelete)
         .then(async(response) => {
             console.log(response)
             console.log("Manga "+ idToDelete + " deleted from list");

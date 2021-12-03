@@ -32,7 +32,7 @@ const NavigationBar = () => {
             </Typography>
           </Link>
           <IconButton className="bookmars-btn"  onClick={()=>{
-            history.push('/to-read-list');
+            history.push('/my-list');
           }}>
             <BookmarksIcon className="bookmars-icon"/>
           </IconButton>

@@ -1,7 +1,7 @@
 import React from "react";
 import NavigationBar from "../../components/NavBar";
 import ReviewPreview from "../../components/PreviewReview";
-import LoginService from "../../services/MangaShelfService";
+import MangaShelfService from "../../services/MangaShelfService";
 import SessionStorageHelper from "../../tools/SessionStorageHelper";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
@@ -57,7 +57,7 @@ class Home extends React.Component<{}, ListState> {
         const imageURL = resImange.url;
         this.setState({imageURL});
         
-        LoginService.getReviews()
+        MangaShelfService.getReviews()
           .then(async(response) => {
             const reviews = response.data as Review[];
             console.log(reviews);
@@ -73,34 +73,39 @@ class Home extends React.Component<{}, ListState> {
         const currentDate = new Date().getDate().toString();
         console.log(currentDate);
 
+        MangaShelfService.getManga(mangaId)
+        .then(async(response) => {
+            console.log(response);            
+            const mangaToRead = response.data as Manga;
+            this.setState({mangaToRead});
+        })
+        .catch((error) => {
+        console.log(error);
+        console.log("Error adding manga "+ toRead.mangaId + " to list");
+        });  
+
         const toRead = {
             userId: SessionStorageHelper.getUserId(),
             mangaId: mangaId,
+            mangaTitle: this.state.mangaToRead.title as string,
+            mangaAuthor: this.state.mangaToRead.author as string,
             dateAdded: currentDate,
         } as ToRead;
 
-        LoginService.addToRead(toRead)
+        console.log(toRead);
+
+        MangaShelfService.addToRead(toRead)
             .then(async(response) => {
                 console.log(response);
-                console.log("Manga " + mangaId + " added to list");
-
+                console.log("Manga " + toRead.mangaId + " added to list");
+                
                 const newToRead = response.data as ToRead;
-
-                LoginService.getManga(mangaId)
-                    .then(async(response) => {
-                        const mangaToRead = response.data as Manga;
-                        this.setState({mangaToRead});
-                        console.log(mangaToRead);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });          
 
                 this.setState({newToRead, openAdded: true, openDeleted: false});
             })
             .catch((error) => {
             console.log(error);
-            console.log("Error adding manga "+ mangaId + " to list");
+            console.log("Error adding manga "+ toRead.mangaId + " to list");
             });  
     }
     
@@ -108,7 +113,7 @@ class Home extends React.Component<{}, ListState> {
 
         const idToDelete = this.state.newToRead.id as number;
 
-        LoginService.deleteFromToReadList(idToDelete)
+        MangaShelfService.deleteFromToReadList(idToDelete)
         .then(async(response) => {
             console.log(response)
             console.log("Manga "+ idToDelete + " deleted from list");

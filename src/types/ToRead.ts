@@ -4,7 +4,7 @@ export default interface ToRead {
     userId: number,    
     mangaId: number,    
     dateAdded?: string,
-    mangaTitle?: string,    
-    mangaAuthor?: string,    
+    mangaTitle: string,    
+    mangaAuthor: string,    
     mangaPublicationDate?: string,
 }

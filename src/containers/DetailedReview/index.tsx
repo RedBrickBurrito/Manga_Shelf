@@ -12,6 +12,7 @@ interface DetailState {
     review: Review;
     imageURL: string;
     relatedReviewsTitle: string;
+    mangaToRead: Manga;
     newToRead: ToRead;
     openAdded: boolean;
     openDeleted: boolean
@@ -111,9 +112,22 @@ class DetailedReview extends React.Component<{}, DetailState>  {
         const currentDate = new Date().getDate().toString();
         console.log(currentDate);
 
+        MangaShelfService.getManga(mangaId)
+        .then(async(response) => {
+            console.log(response);            
+            const mangaToRead = response.data as Manga;
+            this.setState({mangaToRead});
+        })
+        .catch((error) => {
+        console.log(error);
+        console.log("Error adding manga "+ toRead.mangaId + " to list");
+        });  
+
         const toRead = {
             userId: SessionStorageHelper.getUserId(),
             mangaId: mangaId,
+            mangaTitle: this.state.mangaToRead.title as string,
+            mangaAuthor: this.state.mangaToRead.author as string,
             dateAdded: currentDate,
         } as ToRead;
 

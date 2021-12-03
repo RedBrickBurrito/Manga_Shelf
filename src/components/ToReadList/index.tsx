@@ -41,7 +41,7 @@ interface ToReadListProps{
                                 </Box>
                             }
                         >
-                        {props.newToRead.mangaTitle} added to read later!
+                        {props.newToRead.mangaTitle} added to read later! Refresh to update your list :)
                         </Alert>
                     </Collapse>
 
@@ -68,7 +68,7 @@ interface ToReadListProps{
                             </Box>
                             }
                         >
-                        {props.newToRead.mangaTitle} deleted from list
+                        {props.newToRead.mangaTitle} deleted from queue. Refresh to update your list :)
                         </Alert>
                     </Collapse>
                 </Grid>

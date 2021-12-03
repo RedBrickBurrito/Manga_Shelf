@@ -3,7 +3,8 @@ import Manga from "../../types/Manga";
 import Review from "../../types/Review";
 import DetailPublish from "../../components/PublishDetail";
 import MangaShelfService from "../../services/MangaShelfService";
-import SessionStorageHelper from "../../tools/SessionStorageHelper"
+import SessionStorageHelper from "../../tools/SessionStorageHelper";
+import { RouteComponentProps } from "react-router";
 import { SelectChangeEvent } from "@mui/material/Select";
 import NavigationBar from "../../components/NavBar";
 
@@ -21,7 +22,7 @@ interface MangaState {
  * Home Reviews Container
  * @extends {Component<Props, State>}
  */
-class PublishReview extends React.Component<{}, MangaState> {
+class PublishReview extends React.Component<RouteComponentProps, MangaState> {
 
     state = {
         mangas: [] as Manga[],
@@ -56,6 +57,7 @@ class PublishReview extends React.Component<{}, MangaState> {
         .catch((error)=>{
             console.log(error);
         })
+        this.props.history.push('/home');
         console.log(this.state.review);
     }
 

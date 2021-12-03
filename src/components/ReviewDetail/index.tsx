@@ -6,13 +6,18 @@ import { Link } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import React from 'react';
 import Review from '../../types/Review';
+import Manga from '../../types/Manga';
 
 interface ReviewDetailProps {
     relatedReviews: Review[];
     review: Review;
-    addMangaToRead(mangaId: any): void;
-    deleteMangaFromToRead(mangaId: any): void;
+    addMangaToRead(mangaId: number): void;
+    deleteMangaFromToRead(): void;
+    closeAlert(alert: string): void;
     imageUrl: string;
+    relatedReviewsTitle: string;
+    openAdded: boolean;
+    openDeleted: boolean;
 }
 
 /**
@@ -20,14 +25,12 @@ interface ReviewDetailProps {
  * @returns ProductPreview UI elements
  */
  const ReviewDetail: React.FC<ReviewDetailProps> = (props) => {
-    const [openAdded, setOpenAdded] = React.useState(false);
-    const [openDeleted, setOpenDeleted] = React.useState(false);
          
     return (
         <div className="ReviewPreview">
             <Grid container className="detail-review-grid" spacing={2}>
                 <Grid item lg={12}>
-                    <Collapse in={openAdded}>
+                    <Collapse in={props.openAdded}>
                         <Alert 
                             className="detail-alert" 
                             severity="success"
@@ -37,16 +40,14 @@ interface ReviewDetailProps {
                                     className="detail-alert-undo-btn" 
                                     variant="contained"
                                     onClick={()=>{
-                                        props.deleteMangaFromToRead(props.review.mangaId); 
-                                        setOpenAdded(false);
-                                        setOpenDeleted(true);
+                                        props.deleteMangaFromToRead(); 
                                         }}>
                                     UNDO
                                 </Button>
                                 <Button 
                                     className="detail-alert-close-btn"
                                     variant="outlined" 
-                                    onClick={()=>{setOpenAdded(false)}}>
+                                    onClick={()=>{props.closeAlert("added")}}>
                                     CLOSE
                                 </Button>
                                 </Box>
@@ -56,7 +57,7 @@ interface ReviewDetailProps {
                         </Alert>
                     </Collapse>
 
-                    <Collapse in={openDeleted}>
+                    <Collapse in={props.openDeleted}>
                         <Alert 
                             className="detail-alert" 
                             severity="warning"
@@ -65,7 +66,7 @@ interface ReviewDetailProps {
                                 <Button 
                                     className="detail-alert-close-btn"
                                     variant="outlined" 
-                                    onClick={()=>{setOpenDeleted(false)}}>
+                                    onClick={()=>{props.closeAlert("deleted")}}>
                                     CLOSE
                                 </Button>
                                 </Box>
@@ -92,27 +93,23 @@ interface ReviewDetailProps {
                     <IconButton className="detail-add-btn"                             
                         onClick={()=>{
                             props.addMangaToRead(props.review.mangaId);
-                            setOpenAdded(true);
-                            setOpenDeleted(false);
-                             }}>
+                        }}>
                         <AddIcon className="detail-add-icon"></AddIcon>
                     </IconButton>
                 </Grid>
                
                
                 <Grid item lg={12}>
-                    <Typography className="detail-more-reviews"> Other reviews about this Manga...</Typography>
+                    <Typography className="detail-more-reviews">{props.relatedReviewsTitle}</Typography>
                 </Grid>
                 <Grid container className="detail-reviews-container" spacing={2}>
                     {props.relatedReviews.map((review)=>(
                          <Grid item lg={3} className="detail-review-container"> 
-                            <Link className="detail-link" to={`/detail?reviewId=${review.id}`}> 
                                  <Paper className="detail-review-card">
                                      <Typography  className="detail-review-title">{review.mangaTitle}</Typography>                           
                                      <Typography  className="detail-review-description">{review.description}</Typography>
                                      <Typography  className="detail-review-author">- {review.username}</Typography>
                                  </Paper>
-                             </Link>
                          </Grid>
                     ))}
                 </Grid>

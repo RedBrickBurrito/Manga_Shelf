@@ -1,13 +1,20 @@
 import React from "react";
+import NavigationBar from "../../components/NavBar";
 import ReviewDetail from "../../components/ReviewDetail";
+import LoginService from "../../services/LoginService";
 import Manga from "../../types/Manga";
 import Review from "../../types/Review";
+import ToRead from "../../types/ToRead";
 import User from "../../types/User";
 
 interface DetailState {
     relatedReviews: Review[];
     review: Review;
     imageURL: string;
+    relatedReviewsTitle: string;
+    newToRead: ToRead;
+    openAdded: boolean;
+    openDeleted: boolean
 }
 
 /**
@@ -19,7 +26,12 @@ class DetailedReview extends React.Component<{}, DetailState>  {
     state = {
         relatedReviews: [] as Review[],
         review: {} as Review,
-        imageURL: ""
+        imageURL: "",
+        relatedReviewsTitle: "Other reviews about this manga",
+        newToRead: {} as ToRead,
+        mangaToRead: {} as Manga,
+        openAdded: false,
+        openDeleted: false
     }
 
     /**
@@ -28,11 +40,15 @@ class DetailedReview extends React.Component<{}, DetailState>  {
      */
     render() {
         return (
-            <ReviewDetail 
-            relatedReviews={this.state.relatedReviews} review={this.state.review}
-            addMangaToRead={this.addMangaToRead} deleteMangaFromToRead={this.deleteMangaFromToRead} 
-            imageUrl={this.state.imageURL}
-            />
+            <>
+            <NavigationBar />
+            <ReviewDetail
+                    relatedReviews={this.state.relatedReviews} review={this.state.review}
+                    addMangaToRead={this.addMangaToRead} deleteMangaFromToRead={this.deleteMangaFromToRead}
+                    closeAlert={this.closeAlert}
+                    imageUrl={this.state.imageURL} relatedReviewsTitle={this.state.relatedReviewsTitle} 
+                    openAdded={this.state.openAdded} openDeleted={this.state.openDeleted}/>
+                </>
         )
     }
 
@@ -41,150 +57,106 @@ class DetailedReview extends React.Component<{}, DetailState>  {
         const urlParams = new URLSearchParams(queryString);
         const reviewId = Number(urlParams.get('reviewId'));  
 
-        const review = {
-            id: reviewId,
-            userId: 11,    
-            mangaId: 111,    
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            rate: 4.4
+        LoginService.getReview(reviewId)
+          .then(async(response) => {
+            const review = response.data as Review;
+            console.log(review);
 
-        } as Review;
+            LoginService.getMangaReviews(review.mangaId)
+          .then(async(response) => {
+            const resRelatedReviews = response.data as Review[];
 
-        const user = {
-            id: 57,    
-            username: "Scyruz",    
-            password: "root",    
-            email: "email@tec.mx"
-        } as User; 
+            const relatedReviews = [] as Review[];
 
-        const manga = {
-            id: 103,    
-            title: "Manga Name",    
-            author: "CLAMP",    
-        } as Manga;
+            for ( const relatedReview of resRelatedReviews){
+                if(relatedReview.id !== reviewId){
+                    relatedReviews.push(relatedReview);
+                }
+            }
+             console.log(relatedReviews.length);
+             
+            if (relatedReviews.length === 0){
+                const relatedReviewsTitle = "No more reviews about this manga were found :("
+                this.setState({relatedReviewsTitle});
+            } 
+            else{
+                console.log(relatedReviews);
+                this.setState({review, relatedReviews});
+            }
+            
+          })
+          .catch((error) => {
+            console.log(error);
+            });        
+            this.setState({review, });
 
-        const reviewUpdate = {...review, 
-            username: user.username,
-            mangaTitle: manga.title,
-        };
+          })
+          .catch((error) => {
+            console.log(error);
+            });          
 
+        
         const response = await (await fetch("https://api.waifu.pics/sfw/waifu")).json();
         
         console.log(response);
-        const url = response.url;
-        
+        const url = response.url;        
 
         this.setState({
-            review: reviewUpdate,
             imageURL: url
         });
         
-        const relatedReviews = [
-            {
-                id: 1,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 2,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 3,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 4,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 5,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 6,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 7,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-            {
-                id: 8,
-                userId: 11,    
-                mangaId: 111,    
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rate: 4.4,
-            },
-        ];
-
-        const reviewsUpdate = [] as Review[];
-
-        for (const review of relatedReviews) {
-            const user = {
-                id: 57,    
-                username: "Username",    
-                password: "root",    
-                email: "email@tec.mx"
-            } as User; 
-
-            const manga = {
-                id: 103,    
-                title: "Related Manga Name",    
-                author: "CLAMP",    
-            } as Manga;
-
-            const reviewUpdate = {...review, 
-                username: user.username,
-                mangaTitle: manga.title,
-            };
-
-            reviewsUpdate.push(reviewUpdate);                       
-          }
-
-        this.setState({ relatedReviews: reviewsUpdate});
-
     }
 
-    addMangaToRead(mangaId: any){
-        try
-        {
-            console.log("Manga "+ mangaId + " added to list");
+    addMangaToRead = (mangaId: any) =>{
+        const currentDate = new Date().getDate().toString();
+        console.log(currentDate);
 
-        }
-        catch(e){
-            console.log("Error adding manga " + mangaId + " to list");
-        }
+        const toRead = {
+            userId: 21,
+            mangaId: mangaId,
+            dateAdded: currentDate,
+        } as ToRead;
+
+
+        LoginService.addToRead(toRead)
+            .then(async(response) => {
+                console.log(response);
+                console.log("Manga " + toRead.mangaId + " added to list");
+                
+                const newToRead = response.data as ToRead;
+
+                this.setState({newToRead, openAdded: true, openDeleted: false});
+            })
+            .catch((error) => {
+            console.log(error);
+            console.log("Error adding manga "+ toRead.mangaId + " to list");
+            });  
+
     }
     
-    deleteMangaFromToRead(mangaId: any){
-        try
-        {
-            console.log("Manga " + mangaId + " deleted from list");
+    deleteMangaFromToRead = () =>{
+        const idToDelete = this.state.newToRead.id as number;
+
+        LoginService.deleteFromToReadList(idToDelete)
+        .then(async(response) => {
+            console.log(response)
+            console.log("Manga "+ idToDelete + " deleted from list");
+
+            this.setState({openAdded: false, openDeleted:true});
+        })
+        .catch((error) => {
+        console.log(error);
+        console.log("Error deleting manga "+ idToDelete + " from list");
+        });           
+    }
+
+    closeAlert = (alert: string) => {
+        if (alert === "added"){
+            this.setState({openAdded: false});
         }
-        catch(e)
-        {
-            console.log("Error deleting manga " + mangaId + " from list");
+
+        if(alert === "deleted"){
+            this.setState({openDeleted:false});
         }
     }
 }

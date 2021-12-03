@@ -69,6 +69,8 @@
 }
 
 .detail-review-card{
+    flex: 1 !important;
+    justify-content: center !important;
     align-items: center !important;
     margin-top: 1rem !important;
     background-color: #262626 !important;

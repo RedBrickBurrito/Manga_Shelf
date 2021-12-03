@@ -4,12 +4,16 @@ import BackspaceIcon from '@mui/icons-material/Backspace';
 import './index.css';
 import React from "react";
 import { Alert } from "@mui/material";
-import ActionSettingsInputAntenna from "material-ui/svg-icons/action/settings-input-antenna";
 
 interface ToReadListProps{
     toReadList: ToRead[];
     deleteMangaFromToRead(mangaId: any): any;
-    addMangaToRead(mangaId: any): void;
+    addMangaToRead(toRead: ToRead): void;
+    closeAlert(alert: string): void; 
+    newToRead: ToRead;
+    openAdded: boolean;
+    openDeleted: boolean;
+    title: string;
 }
 
 /**
@@ -18,15 +22,11 @@ interface ToReadListProps{
  */
  const ToReadList: React.FC<ToReadListProps> = (props) => {
 
-    const [manga, setManga] = React.useState({id:0, title:" " as any, open:true});
-    const [openAdded, setOpenAdded] = React.useState(false);
-    const [openDeleted, setOpenDeleted] = React.useState(false);
-
     return(
         <div className="ToReadList">
             <Grid container className="toread-container" spacing={2}>
             <Grid item lg={12}>
-                    <Collapse in={openAdded}>
+                    <Collapse in={props.openAdded}>
                         <Alert 
                             className="detail-alert" 
                             severity="success"
@@ -35,17 +35,17 @@ interface ToReadListProps{
                                 <Button 
                                     className="detail-alert-close-btn"
                                     variant="outlined" 
-                                    onClick={()=>{setOpenAdded(false)}}>
+                                    onClick={()=>{props.closeAlert("added")}}>
                                     CLOSE
                                 </Button>
                                 </Box>
                             }
                         >
-                        {manga.title} added to read later!
+                        {props.newToRead.mangaTitle} added to read later!
                         </Alert>
                     </Collapse>
 
-                    <Collapse in={openDeleted}>
+                    <Collapse in={props.openDeleted}>
                         <Alert 
                             className="detail-alert" 
                             severity="warning"
@@ -55,28 +55,26 @@ interface ToReadListProps{
                                     className="detail-alert-undo-btn" 
                                     variant="contained"
                                     onClick={()=>{
-                                        props.addMangaToRead(manga.id); 
-                                        setOpenAdded(true);
-                                        setOpenDeleted(false);
+                                        props.addMangaToRead(props.newToRead); 
                                         }}>
                                     UNDO
                                 </Button>
                                 <Button 
                                     className="detail-alert-close-btn"
                                     variant="outlined" 
-                                    onClick={()=>{setOpenDeleted(false)}}>
+                                    onClick={()=>{props.closeAlert("deleted")}}>
                                     CLOSE
                                 </Button>
                             </Box>
                             }
                         >
-                        {manga.title} deleted from list
+                        {props.newToRead.mangaTitle} deleted from list
                         </Alert>
                     </Collapse>
                 </Grid>
 
                 <Grid item lg={12}>
-                   <Typography className="toread-title">your mangas to read later</Typography>
+                   <Typography className="toread-title">{props.title}</Typography>
                 </Grid>
                 <Grid item lg={2}/>
                 <Grid item lg={8}>
@@ -86,17 +84,13 @@ interface ToReadListProps{
                                 <Grid item lg={11} className="toread-manga-info-grid">
                                     <Typography className="toread-manga-title">{toRead.mangaTitle}</Typography>
                                     <Typography className="toread-manga-author">{toRead.mangaAuthor}</Typography>
-                                    <Typography className="toread-manga-date">{toRead.mangaPublicationDate}</Typography>
                                 </Grid>
                                 <Grid item lg={1} className="toread-delete-btn-grid">
                                     <IconButton 
                                             className="delete-toread-btn" 
                                             onClick={()=>{
-                                                setManga({id: toRead.mangaId, title: toRead.mangaTitle, open:false})
-                                                props.deleteMangaFromToRead(toRead.mangaId); 
-                                                setOpenAdded(false);
-                                                setOpenDeleted(true);
-                                                }}>
+                                                props.deleteMangaFromToRead(toRead.id); 
+                                            }}>
                                         <BackspaceIcon className="delete-toread-icon"/>
                                     </IconButton>
                                 </Grid>
